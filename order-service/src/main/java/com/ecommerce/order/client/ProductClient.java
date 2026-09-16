@@ -1,0 +1,26 @@
+package com.ecommerce.order.client;
+
+import com.ecommerce.order.dto.ProductDTO;
+import com.ecommerce.order.dto.StockResponseDTO;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+/**
+ * OpenFeign Client for synchronous REST communication with Product / Inventory Service.
+ * Resolves the service instance dynamically via Eureka Service Discovery (PRODUCT-SERVICE).
+ */
+@FeignClient(name = "product-service")
+public interface ProductClient {
+
+    @GetMapping("/api/products/{id}")
+    ProductDTO getProductById(@PathVariable("id") Long id);
+
+    @PutMapping("/api/products/{id}/reduce-stock")
+    StockResponseDTO reduceStock(@PathVariable("id") Long id, @RequestParam("quantity") Integer quantity);
+
+    @PutMapping("/api/products/{id}/restore-stock")
+    StockResponseDTO restoreStock(@PathVariable("id") Long id, @RequestParam("quantity") Integer quantity);
+}

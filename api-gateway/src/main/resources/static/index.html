@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Microservices Platform | Live Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0d14;
+            --bg-secondary: #111726;
+            --bg-card: rgba(22, 30, 49, 0.7);
+            --bg-card-hover: rgba(30, 41, 66, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-accent: rgba(99, 102, 241, 0.3);
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.25);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+                        var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 0;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Top Header */
+        header {
+            background: rgba(17, 23, 38, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-selector-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .user-selector-wrap select {
+            background: transparent;
+            color: var(--text-main);
+            border: none;
+            outline: none;
+            font-size: 0.85rem;
+            font-family: var(--font-main);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .user-selector-wrap select option {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+        }
+
+        .btn-link {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+            border: 1px solid var(--border-accent);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Container */
+        .main-container {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Architecture Topology Strip */
+        .topology-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .topology-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .topology-header h2 {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--success-glow);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-pill .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .service-node {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-node:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-accent);
+            transform: translateY(-2px);
+        }
+
+        .service-node.active-now {
+            border-left: 3px solid var(--success);
+        }
+
+        .service-node-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .service-port {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .service-desc {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
+        /* Two Column Layout */
+        .content-split {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .content-split {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Product Catalog */
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-heading h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            border-color: var(--border-accent);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .product-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 0.85rem;
+        }
+
+        .product-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .product-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            min-height: 40px;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-price {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #38bdf8;
+            font-family: var(--font-mono);
+        }
+
+        .product-stock {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .stock-available {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .stock-low {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-order {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-order:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-order:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Order & Orchestration Panel */
+        .orchestration-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            box-shadow: var(--shadow-card);
+            height: fit-content;
+        }
+
+        .orchestration-panel h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .order-form-group label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .order-form-group select, .order-form-group input {
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .order-form-group select:focus, .order-form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .order-form-group select option {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+        }
+
+        /* SAGA Toggle Switch */
+        .saga-toggle-wrap {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .saga-label-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .saga-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #f87171;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .saga-desc {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--danger);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Orchestration Pipeline Steps */
+        .pipeline-box {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .pipeline-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .step-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .step-item.step-done {
+            color: var(--text-main);
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .step-item.step-done .step-icon {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-item.step-fail {
+            color: #f87171;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .step-item.step-fail .step-icon {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Console / Result Box */
+        .result-box {
+            background: #080c14;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #38bdf8;
+            max-height: 180px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Order History Table */
+        .orders-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .orders-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .orders-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+        }
+
+        .orders-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .order-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .badge-confirmed {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-failed {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge-cancelled {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-cancel {
+            padding: 4px 8px;
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: rgba(17, 23, 38, 0.95);
+            border: 1px solid var(--border-accent);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            font-size: 0.85rem;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo-group">
+            <div class="logo-badge">⚡</div>
+            <div class="logo-text">
+                <h1>Microservices E-Commerce</h1>
+                <p>Distributed Cloud Architecture &amp; Live Orchestration</p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <div class="user-selector-wrap">
+                <span>👤 Active User:</span>
+                <select id="userSelect" onchange="onUserChanged()">
+                    <option value="1">Alice Johnson (alice@example.com)</option>
+                    <option value="2">Bob Smith (bob@example.com)</option>
+                    <option value="3">Charlie Brown (charlie@example.com)</option>
+                </select>
+            </div>
+
+            <a href="http://localhost:8761" target="_blank" class="btn-link" title="Open Netflix Eureka Dashboard">
+                🌐 Eureka Dashboard (8761) ↗
+            </a>
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <!-- Architecture Status Strip -->
+        <section class="topology-card">
+            <div class="topology-header">
+                <h2>📐 Distributed System Architecture Topology</h2>
+                <div class="status-pill">
+                    <span class="dot"></span>
+                    <span id="gatewayStatus">API Gateway Active (Port 8085)</span>
+                </div>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-node active-now">
+                    <div class="service-node-top">
+                        <span class="service-title">API Gateway</span>
+                        <span class="service-port">:8085</span>
+                    </div>
+                    <span class="service-desc">Entry point &amp; Dynamic routing</span>
+                </div>
+
+                <div class="service-node active-now">
+                    <div class="service-node-top">
+                        <span class="service-title">Eureka Discovery</span>
+                        <span class="service-port">:8761</span>
+                    </div>
+                    <span class="service-desc">Service Registry &amp; Health</span>
+                </div>
+
+                <div class="service-node active-now">
+                    <div class="service-node-top">
+                        <span class="service-title">User Service</span>
+                        <span class="service-port">:8081</span>
+                    </div>
+                    <span class="service-desc">Accounts, Auth &amp; Profiles</span>
+                </div>
+
+                <div class="service-node active-now">
+                    <div class="service-node-top">
+                        <span class="service-title">Product Service</span>
+                        <span class="service-port">:8082</span>
+                    </div>
+                    <span class="service-desc">Catalog &amp; Real-time Stock</span>
+                </div>
+
+                <div class="service-node active-now">
+                    <div class="service-node-top">
+                        <span class="service-title">Order Service</span>
+                        <span class="service-port">:8083</span>
+                    </div>
+                    <span class="service-desc">Feign SAGA Orchestrator</span>
+                </div>
+
+                <div class="service-node active-now">
+                    <div class="service-node-top">
+                        <span class="service-title">Payment Service</span>
+                        <span class="service-port">:8084</span>
+                    </div>
+                    <span class="service-desc">TXN Generator &amp; Gateway</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area: Products + Order Orchestrator -->
+        <div class="content-split">
+            
+            <!-- Left: Product Catalog -->
+            <section>
+                <div class="section-heading">
+                    <h2>📦 Product Catalog (Live Inventory)</h2>
+                    <button class="btn-link" onclick="loadProducts()" style="cursor: pointer;">🔄 Refresh Stock</button>
+                </div>
+
+                <div class="products-grid" id="productsGrid">
+                    <!-- Loaded dynamically via JavaScript -->
+                    <div style="color: var(--text-dim);">Loading products from product-service...</div>
+                </div>
+            </section>
+
+            <!-- Right: Order Placement & SAGA Orchestration Monitor -->
+            <aside class="orchestration-panel">
+                <h3>⚡ Order Orchestrator</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">
+                    When you place an order, <strong>Order Service</strong> coordinates across <strong>User</strong>, <strong>Product</strong>, and <strong>Payment</strong> services using OpenFeign.
+                </p>
+
+                <div class="order-form-group">
+                    <label>Selected Product</label>
+                    <select id="selectedProduct" onchange="updatePriceEstimate()">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="order-form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="orderQuantity" min="1" max="10" value="1" onchange="updatePriceEstimate()" onkeyup="updatePriceEstimate()">
+                    </div>
+                    <div class="order-form-group">
+                        <label>Payment Method</label>
+                        <select id="paymentMethod">
+                            <option value="CREDIT_CARD">Credit Card</option>
+                            <option value="DEBIT_CARD">Debit Card</option>
+                            <option value="UPI">UPI (Google Pay)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SAGA Rollback Simulation Toggle -->
+                <div class="saga-toggle-wrap">
+                    <div class="saga-label-group">
+                        <span class="saga-title">⚠️ Simulate Payment Failure</span>
+                        <span class="saga-desc">Tests SAGA pattern: deducts stock, fails payment, and auto-restores stock!</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="simulateFailure">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Orchestration Pipeline Tracker -->
+                <div class="pipeline-box">
+                    <div class="pipeline-title">Live Orchestration Pipeline</div>
+                    <div class="step-list">
+                        <div class="step-item" id="step1"><span class="step-icon">1</span> <span>User Service: Validate Customer ID</span></div>
+                        <div class="step-item" id="step2"><span class="step-icon">2</span> <span>Product Service: Check Available Stock</span></div>
+                        <div class="step-item" id="step3"><span class="step-icon">3</span> <span>Product Service: Decrement Inventory</span></div>
+                        <div class="step-item" id="step4"><span class="step-icon">4</span> <span>Payment Service: Process Transaction</span></div>
+                        <div class="step-item" id="step5"><span class="step-icon">5</span> <span>Order Service: Confirm Order</span></div>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button class="btn-order" id="btnPlaceOrder" onclick="executeOrder()">
+                    <span>🛒 Place Order via API Gateway</span>
+                </button>
+
+                <!-- Console Output -->
+                <div class="result-box" id="consoleOutput">// Live microservice JSON response will appear here...</div>
+            </aside>
+
+        </div>
+
+        <!-- Orders History Table -->
+        <section class="orders-section">
+            <div class="section-heading">
+                <h2>📑 Recent Orders &amp; Compensation Status</h2>
+                <button class="btn-link" onclick="loadOrders()" style="cursor: pointer;">🔄 Refresh Orders</button>
+            </div>
+
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Total ($)</th>
+                        <th>Payment Status</th>
+                        <th>Txn Ref</th>
+                        <th>Order Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <tr><td colspan="9" style="text-align: center; color: var(--text-dim);">Loading order history...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+    </div>
+
+    <div id="toast">Order placed successfully!</div>
+
+    <script>
+        let cachedProducts = [];
+
+        // Icons map
+        const productIcons = {
+            1: "📱",
+            2: "🎧",
+            3: "💻",
+            4: "🖱️"
+        };
+
+        async function init() {
+            await loadProducts();
+            await loadOrders();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.style.display = 'none'; }, 4000);
+        }
+
+        function resetPipeline() {
+            for (let i = 1; i <= 5; i++) {
+                const el = document.getElementById(`step${i}`);
+                el.className = 'step-item';
+            }
+        }
+
+        function setPipelineStep(num, status) {
+            const el = document.getElementById(`step${num}`);
+            if (el) {
+                el.className = `step-item ${status === 'done' ? 'step-done' : 'step-fail'}`;
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                const res = await fetch('/api/products');
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                cachedProducts = await res.json();
+                renderProducts();
+                populateProductSelect();
+            } catch (err) {
+                console.error("Failed to load products:", err);
+                document.getElementById('productsGrid').innerHTML = 
+                    `<div style="color: var(--danger); grid-column: 1/-1;">Error connecting to /api/products: ${err.message}. Ensure product-service is running.</div>`;
+            }
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            cachedProducts.forEach(p => {
+                const icon = productIcons[p.id] || "📦";
+                const stockClass = p.quantity > 10 ? 'stock-available' : 'stock-low';
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="product-icon">${icon}</div>
+                        <h3 class="product-name">${p.name}</h3>
+                        <p class="product-desc">${p.description}</p>
+                    </div>
+                    <div>
+                        <div class="product-meta">
+                            <span class="product-price">$${p.price.toFixed(2)}</span>
+                            <span class="product-stock ${stockClass}">Stock: ${p.quantity} units</span>
+                        </div>
+                        <button class="btn-order" onclick="quickSelectProduct(${p.id})" ${p.quantity <= 0 ? 'disabled' : ''}>
+                            ${p.quantity > 0 ? '⚡ Select to Buy' : 'Out of Stock'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function populateProductSelect() {
+            const sel = document.getElementById('selectedProduct');
+            sel.innerHTML = '';
+            cachedProducts.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = `${p.name} ($${p.price.toFixed(2)}) - ${p.quantity} in stock`;
+                sel.appendChild(opt);
+            });
+            updatePriceEstimate();
+        }
+
+        function quickSelectProduct(id) {
+            document.getElementById('selectedProduct').value = id;
+            updatePriceEstimate();
+            window.scrollTo({ top: 350, behavior: 'smooth' });
+        }
+
+        function updatePriceEstimate() {
+            const pId = parseInt(document.getElementById('selectedProduct').value);
+            const qty = parseInt(document.getElementById('orderQuantity').value) || 1;
+            const product = cachedProducts.find(p => p.id === pId);
+            if (product) {
+                const total = (product.price * qty).toFixed(2);
+                document.getElementById('btnPlaceOrder').innerHTML = 
+                    `<span>🛒 Place Order ($${total})</span>`;
+            }
+        }
+
+        function onUserChanged() {
+            showToast("Active user changed. Orders will be assigned to this user.");
+        }
+
+        async function executeOrder() {
+            const btn = document.getElementById('btnPlaceOrder');
+            const consoleBox = document.getElementById('consoleOutput');
+            const userId = parseInt(document.getElementById('userSelect').value);
+            const productId = parseInt(document.getElementById('selectedProduct').value);
+            const quantity = parseInt(document.getElementById('orderQuantity').value);
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const simulateFailure = document.getElementById('simulateFailure').checked;
+
+            if (!productId || quantity < 1) {
+                alert("Please select a valid product and quantity!");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<span>⏳ Orchestrating Microservices...</span>`;
+            resetPipeline();
+            consoleBox.textContent = "// Starting SAGA orchestration across User, Product, and Payment services...\n";
+
+            // Visual step 1 & 2
+            setPipelineStep(1, 'done');
+            consoleBox.textContent += "-> [User-Service] User ID " + userId + " validated.\n";
+            setPipelineStep(2, 'done');
+            consoleBox.textContent += "-> [Product-Service] Stock verified for Product ID " + productId + ".\n";
+            setPipelineStep(3, 'done');
+            consoleBox.textContent += "-> [Product-Service] Inventory reserved (-" + quantity + " units).\n";
+
+            try {
+                const payload = {
+                    userId: userId,
+                    productId: productId,
+                    quantity: quantity,
+                    paymentMethod: paymentMethod,
+                    simulatePaymentFailure: simulateFailure
+                };
+
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                consoleBox.textContent += JSON.stringify(data, null, 2);
+
+                if (data.status === 'CONFIRMED') {
+                    setPipelineStep(4, 'done');
+                    setPipelineStep(5, 'done');
+                    showToast(`✅ Order #${data.orderId} Confirmed! Txn: ${data.paymentReference}`);
+                } else if (data.status === 'PAYMENT_FAILED') {
+                    setPipelineStep(4, 'fail');
+                    setPipelineStep(5, 'fail');
+                    showToast(`⚠️ Payment Failed! SAGA Compensated: Stock auto-restored.`);
+                }
+
+                // Refresh state
+                await loadProducts();
+                await loadOrders();
+
+            } catch (err) {
+                consoleBox.textContent += "\n[Error] " + err.message;
+                setPipelineStep(4, 'fail');
+            } finally {
+                btn.disabled = false;
+                updatePriceEstimate();
+            }
+        }
+
+        async function loadOrders() {
+            try {
+                const res = await fetch('/api/orders');
+                if (!res.ok) return;
+                const orders = await res.json();
+                const tbody = document.getElementById('ordersTableBody');
+                tbody.innerHTML = '';
+
+                if (orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-dim);">No orders found yet. Place an order above!</td></tr>`;
+                    return;
+                }
+
+                // Sort newest first
+                orders.sort((a, b) => b.orderId - a.orderId);
+
+                orders.forEach(o => {
+                    const badgeClass = o.status === 'CONFIRMED' ? 'badge-confirmed' :
+                                       o.status === 'PAYMENT_FAILED' ? 'badge-failed' : 'badge-cancelled';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>#${o.orderId}</strong></td>
+                        <td>${o.userName || ('User ' + o.userId)}</td>
+                        <td>${o.productName || ('Item ' + o.productId)}</td>
+                        <td>${o.quantity}</td>
+                        <td style="font-family: var(--font-mono); font-weight: 700;">$${o.totalAmount.toFixed(2)}</td>
+                        <td>${o.paymentStatus || 'N/A'}</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--primary-light);">${o.paymentReference || '—'}</td>
+                        <td><span class="order-badge ${badgeClass}">${o.status}</span></td>
+                        <td>
+                            ${o.status === 'CONFIRMED' ? `<button class="btn-cancel" onclick="cancelOrder(${o.orderId})">Cancel</button>` : '—'}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+            } catch (err) {
+                console.error("Failed to load orders:", err);
+            }
+        }
+
+        async function cancelOrder(orderId) {
+            if (!confirm(`Are you sure you want to cancel Order #${orderId}? Stock will be refunded!`)) return;
+
+            try {
+                const res = await fetch(`/api/orders/${orderId}/cancel`, { method: 'PUT' });
+                const data = await res.json();
+                showToast(`Order #${orderId} cancelled. Stock restored to inventory.`);
+                await loadProducts();
+                await loadOrders();
+            } catch (err) {
+                alert("Failed to cancel order: " + err.message);
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

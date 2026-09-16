@@ -1,0 +1,469 @@
+{
+	"info": {
+		"_postman_id": "ecom-microservices-col-001",
+		"name": "E-Commerce Microservices Architecture",
+		"description": "Complete Postman collection for Distributed Computing academic project: E-Commerce Microservices Architecture.\nRoutes through API Gateway (Port 8085).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Eureka Service Discovery",
+			"item": [
+				{
+					"name": "Eureka Dashboard (Browser/HTML)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8761",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8761",
+							"path": []
+						},
+						"description": "Opens Eureka Discovery Server dashboard to view all 5 registered microservices (UP)."
+					}
+				},
+				{
+					"name": "Eureka Apps Registry (JSON)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8761/eureka/apps",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8761",
+							"path": ["eureka", "apps"]
+						},
+						"description": "Returns JSON registry of all active microservices registered with Eureka."
+					}
+				}
+			]
+		},
+		{
+			"name": "2. User Service",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/users",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "users"]
+						},
+						"description": "Fetches all users from ecommerce_users database via Gateway."
+					}
+				},
+				{
+					"name": "Get User By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/users/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "users", "1"]
+						},
+						"description": "Retrieves user profile for ID 1."
+					}
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"9876500001\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/users",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "users"]
+						},
+						"description": "Creates a new customer user in ecommerce_users."
+					}
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe Updated\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"9876599999\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/users/4",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "users", "4"]
+						},
+						"description": "Updates details for user ID 4."
+					}
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/users/4",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "users", "4"]
+						},
+						"description": "Deletes user ID 4 from ecommerce_users."
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Product & Inventory Service",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "products"]
+						},
+						"description": "Lists all available products with stock levels from ecommerce_products."
+					}
+				},
+				{
+					"name": "Get Product By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/products/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "products", "1"]
+						},
+						"description": "Retrieves product item ID 1."
+					}
+				},
+				{
+					"name": "Check Product Stock",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/products/1/stock",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "products", "1", "stock"]
+						},
+						"description": "Checks real-time inventory quantity and in-stock boolean flag."
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"MacBook Air M3\",\n  \"description\": \"13-inch 16GB unified memory, 512GB SSD\",\n  \"price\": 1299.99,\n  \"quantity\": 25\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "products"]
+						},
+						"description": "Adds a new product to inventory."
+					}
+				},
+				{
+					"name": "Reduce Product Stock (Internal/Direct)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/products/1/reduce-stock?quantity=2",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "products", "1", "reduce-stock"],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Reduces inventory stock by specified quantity."
+					}
+				},
+				{
+					"name": "Restore Product Stock (Internal/Direct)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/products/1/restore-stock?quantity=2",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "products", "1", "restore-stock"],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Restores stock (used for compensation on payment failure or order cancellation)."
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Order Service (Inter-Service Orchestration)",
+			"item": [
+				{
+					"name": "Place Order - SUCCESS Flow",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"productId\": 1,\n  \"quantity\": 2,\n  \"paymentMethod\": \"CREDIT_CARD\",\n  \"simulatePaymentFailure\": false\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "orders"]
+						},
+						"description": "Full distributed workflow:\n1. Calls User Service to validate customer\n2. Calls Product Service to check stock\n3. Calculates total amount ($799.99 * 2)\n4. Decrements product stock\n5. Calls Payment Service\n6. Saves order as CONFIRMED\n7. Returns consolidated receipt"
+					}
+				},
+				{
+					"name": "Place Order - Payment Failure & Compensation Flow",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"productId\": 1,\n  \"quantity\": 1,\n  \"paymentMethod\": \"CREDIT_CARD\",\n  \"simulatePaymentFailure\": true\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "orders"]
+						},
+						"description": "Demonstrates SAGA Compensation:\n1. Product stock is decremented.\n2. Payment Service declines transaction.\n3. Order Service automatically compensates by restoring product stock.\n4. Order marked as PAYMENT_FAILED."
+					}
+				},
+				{
+					"name": "Place Order - Insufficient Stock (Error 400)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"productId\": 1,\n  \"quantity\": 9999,\n  \"paymentMethod\": \"CREDIT_CARD\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "orders"]
+						},
+						"description": "Returns HTTP 400 Bad Request indicating insufficient stock in inventory."
+					}
+				},
+				{
+					"name": "Place Order - User Not Found (Error 404)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 99999,\n  \"productId\": 1,\n  \"quantity\": 1,\n  \"paymentMethod\": \"CREDIT_CARD\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "orders"]
+						},
+						"description": "Returns HTTP 404 Not Found indicating customer does not exist."
+					}
+				},
+				{
+					"name": "Get All Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "orders"]
+						},
+						"description": "Returns all purchase orders with aggregated customer, product, and payment info."
+					}
+				},
+				{
+					"name": "Get Order By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/orders/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "orders", "1"]
+						},
+						"description": "Fetches order receipt with ID 1."
+					}
+				},
+				{
+					"name": "Cancel Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/orders/1/cancel",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "orders", "1", "cancel"]
+						},
+						"description": "Cancels order and compensates product inventory by restoring stock."
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Payment Service",
+			"item": [
+				{
+					"name": "Process Payment Directly",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 101,\n  \"amount\": 299.99,\n  \"paymentMethod\": \"CREDIT_CARD\",\n  \"simulateFailure\": false\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/api/payments/process",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "payments", "process"]
+						},
+						"description": "Mock payment processor generating unique transaction reference."
+					}
+				},
+				{
+					"name": "Get Payment By Order ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/payments/order/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "payments", "order", "1"]
+						},
+						"description": "Retrieves the payment transaction associated with Order 1."
+					}
+				},
+				{
+					"name": "Get All Payments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/api/payments",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["api", "payments"]
+						},
+						"description": "Lists all payments stored in ecommerce_payments."
+					}
+				}
+			]
+		}
+	]
+}
