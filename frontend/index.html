@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MicroStore — Distributed Microservices Architecture</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="#" class="brand-wrapper">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>MicroStore <span class="badge-tag">Microservices</span></h1>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <!-- API Gateway Status Indicator -->
+        <div class="gateway-pill" id="gateway-indicator" title="Connected to Spring Cloud Gateway on Port 8085">
+          <span class="pulsing-dot"></span>
+          <span>Gateway: <strong>8085</strong></span>
+        </div>
+
+        <!-- Active Customer Profile Switcher -->
+        <div class="user-selector-container">
+          <div class="user-avatar" id="user-avatar">--</div>
+          <select id="user-select" class="user-select" title="Switch active customer">
+            <option value="">Loading users...</option>
+          </select>
+        </div>
+
+        <button class="btn-icon" id="btn-open-user-modal" title="Register New Customer">
+          <span>➕</span> New User
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Microservices Topology & Health Bar -->
+  <section class="topology-section">
+    <div class="topology-container">
+      <div class="topology-header">
+        <div class="topology-title">
+          <span>🌐</span> Cluster Services Topology (Netflix Eureka Registry)
+        </div>
+        <a href="http://localhost:8761" target="_blank" class="btn-icon" style="font-size: 0.75rem; text-decoration: none;">
+          Open Eureka Dashboard ↗
+        </a>
+      </div>
+
+      <div class="topology-grid">
+        <!-- Service Discovery -->
+        <div class="service-card">
+          <div class="service-card-top">
+            <span class="service-name">Eureka Registry</span>
+            <span class="service-status-badge status-up" id="status-eureka">CHECKING</span>
+          </div>
+          <span class="service-port">PORT: 8761</span>
+          <span class="service-role">Service Discovery</span>
+        </div>
+
+        <!-- API Gateway -->
+        <div class="service-card">
+          <div class="service-card-top">
+            <span class="service-name">API Gateway</span>
+            <span class="service-status-badge status-up" id="status-gateway">CHECKING</span>
+          </div>
+          <span class="service-port">PORT: 8085</span>
+          <span class="service-role">Reverse Proxy & CORS</span>
+        </div>
+
+        <!-- User Service -->
+        <div class="service-card">
+          <div class="service-card-top">
+            <span class="service-name">User Service</span>
+            <span class="service-status-badge status-up" id="status-user">CHECKING</span>
+          </div>
+          <span class="service-port">PORT: 8081</span>
+          <span class="service-role">Accounts & Profiles</span>
+        </div>
+
+        <!-- Product Service -->
+        <div class="service-card">
+          <div class="service-card-top">
+            <span class="service-name">Product Service</span>
+            <span class="service-status-badge status-up" id="status-product">CHECKING</span>
+          </div>
+          <span class="service-port">PORT: 8082</span>
+          <span class="service-role">Catalog & Inventory</span>
+        </div>
+
+        <!-- Order Service -->
+        <div class="service-card">
+          <div class="service-card-top">
+            <span class="service-name">Order Service</span>
+            <span class="service-status-badge status-up" id="status-order">CHECKING</span>
+          </div>
+          <span class="service-port">PORT: 8083</span>
+          <span class="service-role">SAGA Orchestrator</span>
+        </div>
+
+        <!-- Payment Service -->
+        <div class="service-card">
+          <div class="service-card-top">
+            <span class="service-name">Payment Service</span>
+            <span class="service-status-badge status-up" id="status-payment">CHECKING</span>
+          </div>
+          <span class="service-port">PORT: 8084</span>
+          <span class="service-role">Transactions Gateway</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <main class="main-wrapper">
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" aria-label="Main Navigation">
+      <button class="tab-btn active" data-tab="catalog" id="tab-btn-catalog">
+        <span>🛍️</span> Storefront Catalog
+      </button>
+      <button class="tab-btn" data-tab="orders" id="tab-btn-orders">
+        <span>📦</span> Orders & Transactions
+      </button>
+      <button class="tab-btn" data-tab="saga" id="tab-btn-saga">
+        <span>🔄</span> SAGA Visualizer
+      </button>
+      <button class="tab-btn" data-tab="inspector" id="tab-btn-inspector">
+        <span>📡</span> Live API Inspector
+      </button>
+    </nav>
+
+    <!-- Tab 1: Product Storefront Catalog -->
+    <section class="tab-pane active" id="tab-catalog">
+      <div class="catalog-header">
+        <div class="section-headline">
+          <h2>Product Catalog & Real-time Stock</h2>
+          <p>Managed independently by <code>product-service</code> on port 8082.</p>
+        </div>
+
+        <div class="catalog-actions">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="product-search" class="search-input" placeholder="Search devices...">
+          </div>
+          <button class="btn-secondary" id="btn-open-product-modal">
+            ➕ Add Product
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Cards Grid -->
+      <div class="product-grid" id="product-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- Tab 2: Orders & Transactions -->
+    <section class="tab-pane" id="tab-orders">
+      <div class="catalog-header">
+        <div class="section-headline">
+          <h2>Distributed Order Orchestration</h2>
+          <p>Orders handled by <code>order-service</code> with OpenFeign inter-service calls.</p>
+        </div>
+        <button class="btn-secondary" onclick="window.location.reload()">
+          🔄 Refresh Orders
+        </button>
+      </div>
+
+      <div class="data-card">
+        <div class="table-responsive">
+          <table class="styled-table" id="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Product & Qty</th>
+                <th>Total Amount</th>
+                <th>Order Status</th>
+                <th>Payment Txn</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: SAGA Transaction Visualizer -->
+    <section class="tab-pane" id="tab-saga">
+      <div class="saga-hero">
+        <div class="saga-header">
+          <div>
+            <h2>SAGA Distributed Pattern & Compensation</h2>
+            <p style="color: var(--text-secondary); margin-top: 0.35rem;">
+              When checkout runs, <code>order-service</code> calls multiple services in a distributed saga. If payment fails, 
+              <strong>automatic compensation</strong> restores the product inventory!
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <button class="btn-primary" id="btn-test-saga-success">
+              ✅ Test Success Flow
+            </button>
+            <button class="btn-secondary" id="btn-test-saga-failure" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171;">
+              ⚠️ Test SAGA Compensation (Failure)
+            </button>
+          </div>
+        </div>
+
+        <div class="saga-steps-flow">
+          <div class="saga-step-node" id="saga-node-1">
+            <div class="saga-step-num">1</div>
+            <div class="saga-step-title">Verify Customer</div>
+            <div class="saga-step-service">USER-SERVICE (:8081)</div>
+          </div>
+
+          <div class="saga-step-node" id="saga-node-2">
+            <div class="saga-step-num">2</div>
+            <div class="saga-step-title">Reserve Inventory</div>
+            <div class="saga-step-service">PRODUCT-SERVICE (:8082)</div>
+          </div>
+
+          <div class="saga-step-node" id="saga-node-3">
+            <div class="saga-step-num">3</div>
+            <div class="saga-step-title">Process Payment</div>
+            <div class="saga-step-service">PAYMENT-SERVICE (:8084)</div>
+          </div>
+
+          <div class="saga-step-node" id="saga-node-4">
+            <div class="saga-step-num">4</div>
+            <div class="saga-step-title">Commit / Rollback</div>
+            <div class="saga-step-service">ORDER-SERVICE (:8083)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="data-card" style="padding: 1.5rem;">
+        <h3 style="font-family: var(--font-heading); margin-bottom: 0.75rem;">How SAGA Works Here:</h3>
+        <ol style="margin-left: 1.5rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+          <li><strong style="color: white;">1. Feign Call to User Service:</strong> Validates that the Customer ID exists in the database.</li>
+          <li><strong style="color: white;">2. Feign Call to Product Service:</strong> Decrements stock quantity by the requested amount.</li>
+          <li><strong style="color: white;">3. Feign Call to Payment Service:</strong> Charges the user's card/UPI.</li>
+          <li><strong style="color: #ef4444;">4. Compensation Logic:</strong> If Payment Service rejects the transaction (or fails), <code>order-service</code> catches the exception and immediately invokes <code>PUT /api/products/{id}/restore-stock</code> to return reserved stock back to the shelf!</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Tab 4: Live API Inspector -->
+    <section class="tab-pane" id="tab-inspector">
+      <div class="catalog-header">
+        <div class="section-headline">
+          <h2>Live Gateway API Inspector</h2>
+          <p>Real-time JSON requests and responses traveling through <code>http://localhost:8085</code>.</p>
+        </div>
+        <button class="btn-secondary" onclick="document.getElementById('api-inspector-log').textContent = ''">
+          🧹 Clear Logs
+        </button>
+      </div>
+
+      <div class="api-inspector">
+        <div class="inspector-header">
+          <div class="inspector-title">
+            <span>●</span> Live Event Stream
+          </div>
+        </div>
+        <pre class="inspector-body" id="api-inspector-log">// Waiting for API interactions...
+// Browse products, register customers, or place an order to see live JSON payloads!</pre>
+      </div>
+    </section>
+  </main>
+
+  <!-- Checkout & SAGA Orchestration Modal -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Checkout & Place Order</h3>
+        <button class="btn-close" id="btn-close-checkout">&times;</button>
+      </div>
+
+      <div style="background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+          <span style="color: var(--text-secondary); font-size: 0.85rem;">Product:</span>
+          <strong id="checkout-product-title" style="color: white;">--</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+          <span style="color: var(--text-secondary); font-size: 0.85rem;">Unit Price:</span>
+          <span id="checkout-product-price" style="font-weight: 600;">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-secondary); font-size: 0.85rem;">Ordering As:</span>
+          <span id="checkout-user-name" style="color: #38bdf8; font-weight: 600;">--</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="checkout-quantity">Quantity:</label>
+        <input type="number" id="checkout-quantity" class="form-input" min="1" value="1">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="checkout-payment-method">Payment Method:</label>
+        <select id="checkout-payment-method" class="form-select">
+          <option value="CREDIT_CARD">Credit Card (Visa / Mastercard)</option>
+          <option value="DEBIT_CARD">Debit Card</option>
+          <option value="UPI">UPI (Instant Transfer)</option>
+        </select>
+      </div>
+
+      <!-- SAGA Compensation Demonstration Toggle -->
+      <div class="simulation-toggle">
+        <div class="toggle-info">
+          <h4>Simulate Payment Failure</h4>
+          <p>Tests SAGA compensation & automatic inventory restoration</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="checkout-simulate-failure">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0 1rem;">
+        <span style="color: var(--text-secondary); font-size: 0.9rem;">Order Total:</span>
+        <span id="checkout-total-price" style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; color: white;">$0.00</span>
+      </div>
+
+      <button class="btn-primary" id="btn-confirm-order" style="width: 100%; justify-content: center;">
+        Confirm & Place Order
+      </button>
+    </div>
+  </div>
+
+  <!-- Register Customer Modal -->
+  <div class="modal-overlay" id="user-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Register New Customer</h3>
+        <button class="btn-close" id="btn-close-user-modal">&times;</button>
+      </div>
+
+      <form id="user-form">
+        <div class="form-group">
+          <label class="form-label" for="reg-user-name">Full Name</label>
+          <input type="text" id="reg-user-name" class="form-input" placeholder="e.g. John Doe" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-user-email">Email Address</label>
+          <input type="email" id="reg-user-email" class="form-input" placeholder="e.g. john@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-user-phone">Phone Number</label>
+          <input type="tel" id="reg-user-phone" class="form-input" placeholder="e.g. 9876543210">
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Register with User Service
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Product Modal -->
+  <div class="modal-overlay" id="product-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Product</h3>
+        <button class="btn-close" id="btn-close-product-modal">&times;</button>
+      </div>
+
+      <form id="product-form">
+        <div class="form-group">
+          <label class="form-label" for="new-prod-name">Product Name</label>
+          <input type="text" id="new-prod-name" class="form-input" placeholder="e.g. MacBook Pro M3" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-prod-desc">Description</label>
+          <textarea id="new-prod-desc" class="form-textarea" rows="3" placeholder="Specs and details..."></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="new-prod-price">Price ($)</label>
+            <input type="number" id="new-prod-price" class="form-input" step="0.01" min="0.1" placeholder="199.99" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-prod-quantity">Initial Stock</label>
+            <input type="number" id="new-prod-quantity" class="form-input" min="1" placeholder="25" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Save to Product Catalog
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- App Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
